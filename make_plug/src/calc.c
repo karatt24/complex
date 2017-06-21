@@ -1,15 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <dlfcn.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <string.h>
 #include "../include/strcompl.h"
 
 int main(){
 
-	int t, i;sh = 0;
+	int t, i,sh = 0;
 	struct my_complex a, b, c;
 	char *g, **func, *func_name;
 	void *ext_lib;
-	struct dirent *dir
+	struct dirent *dir;
+	struct my_complex (*funct)(struct my_complex, struct my_complex);
 	DIR *dp;
 	dp=opendir("plugin");
 
@@ -18,8 +23,8 @@ int main(){
 		func[i]=malloc(sizeof(char)*256);
 	}
 
-	while(dir=readdir(dp) != NULL){
-		if(dir->d_name[strlen(dir->d_name)-2] == "s" && dir->d_name[strlen(dir->d_name)-1] == "o"){
+	while((dir=readdir(dp)) != NULL){
+		if(dir->d_name[strlen(dir->d_name)-2] == 's' && dir->d_name[strlen(dir->d_name)-1] == 'o'){
 			if(sh > 24){
 				func=realloc(func, sizeof(char*));
 				func[sh]=malloc(sizeof(char)*256);
@@ -54,9 +59,7 @@ int main(){
                		printf("\nEnter complex number Z2:\na = ");
                 	scanf("%d", &b.a);
                 	printf("b = ");
-                	scanf("%d",&b.b);
-
-			void (*funct)(struct my_complex; struct my_complex);
+                	scanf("%d", &b.b);
 
 			ext_lib = dlopen(func[t], RTLD_NOW);
 			func_name = dlsym(ext_lib, "func_name");
@@ -87,8 +90,6 @@ int main(){
 				break;
 		}
 */		printf("Answer = %d, %d\n",c.a, c.b);
-		scanf("%s",&g);
-//		system("clear");
 
 	}
 

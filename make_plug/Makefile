@@ -12,7 +12,7 @@ LDFLAGS = -lm -ldl
 all: one $(SUBDIRS)
 
 one: $(OBJECTS)
-		gcc -o calc $^ $(CFLAGS) $(LDFLAGS)
+		gcc -o calc $^ $(CFLAGS) $(LDFLAGS) -g
 
 $(SUBDIRS):
 		make -C $@
