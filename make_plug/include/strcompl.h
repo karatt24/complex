@@ -10,3 +10,8 @@ struct my_complex{
 	int a;
 	int b;
 };
+
+
+struct func_name{
+	char name[256]
+};

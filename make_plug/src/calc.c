@@ -7,6 +7,15 @@
 #include <string.h>
 #include "../include/strcompl.h"
 
+char* redact(char *path){
+	int i;
+	char begin[256]="/home/2016/karatt24/complex/make_plug/plugin/";
+	for(i=0; i<strlen(path); i++){
+		begin[strlen(begin)+i]=path[i];
+	}
+	return begin;
+}
+
 int main(){
 
 	int t, i,sh = 0;
@@ -26,24 +35,29 @@ int main(){
 	while((dir=readdir(dp)) != NULL){
 		if(dir->d_name[strlen(dir->d_name)-2] == 's' && dir->d_name[strlen(dir->d_name)-1] == 'o'){
 			if(sh > 24){
-				func=realloc(func, sizeof(char*));
+				func=realloc(func, (sizeof(char*)*25+sizeof(char*)));
 				func[sh]=malloc(sizeof(char)*256);
 			}
 			func[sh] = dir->d_name;
 			sh++;
+			func[sh] = redact(func[sh]);
+			printf("\n%s\n\n", func[sh]);
 		}
 	}
-
+/*
 	while(1){
 
 		system("clear");
 
 		printf("Select the menu item:\n");
-/*		printf("1 - ADD;\n");
-		printf("2 - SUBSTRACTION;\n");
-		printf("3 - MULTIPLICATION\n");
-		printf("4 - DIVISION\n");.
-*/
+
+		for(i=0; i<sh; i++){
+			func[i]=redact(func[i]);
+			ext_lib = dlopen(func[t], RTLD_NOW);
+			func_name = dlsym(ext_lib, "func_name");
+			funct = dlsym(ext_lib, func_name);
+		}
+
 		for(i=0; i<sh; i++){
 			printf("%d - %s;\n", i, func[i]);
 		}
@@ -61,9 +75,6 @@ int main(){
                 	printf("b = ");
                 	scanf("%d", &b.b);
 
-			ext_lib = dlopen(func[t], RTLD_NOW);
-			func_name = dlsym(ext_lib, "func_name");
-			funct = dlsym(ext_lib, func_name);
 			c = funct(a, b);
 			printf("\nAnswer: Re=%d, Im=%d.", c.a, c.b);
 			dlclose(ext_lib);
@@ -89,8 +100,9 @@ int main(){
 				exit(0);
 				break;
 		}
-*/		printf("Answer = %d, %d\n",c.a, c.b);
+		printf("Answer = %d, %d\n",c.a, c.b);
 
-	}
+	}*/
+	closedir(dp);
 
 }

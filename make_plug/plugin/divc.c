@@ -2,6 +2,7 @@
 #include <math.h>
 #include "../include/strcompl.h"
 
+char namef[256]="Division";
 
 struct my_complex mcompl_div(struct my_complex a, struct my_complex b){
         struct my_complex c;
