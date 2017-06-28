@@ -1,4 +1,4 @@
-SUBDIRS=lib src plugin
+SUBDIRS=src plugin
 OBJECTS=calc.o
 vpath %.c src: plugin
 vpath %.h include
@@ -19,4 +19,4 @@ $(SUBDIRS):
 
 
 clear:
-		rm calc.o ./plugin/libaddc.so ./plugin/libsubc.o .so ./plugin/libmultc.so ./plugin/libdivc.so ./plugin/addc.o ./plugin/subc.o ./plugin/multc.o ./plugin/divc.o
+		rm calc.o calc ./plugin/libaddc.so  ./plugin/libmultc.so ./plugin/libdivc.so ./plugin/libsubc.so ./src/calc.o 

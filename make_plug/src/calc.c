@@ -13,6 +13,7 @@ char* redact(char *path){
 	for(i=0; i<strlen(path); i++){
 		begin[strlen(begin)+i]=path[i];
 	}
+	begin[strlen(begin)+1]='\0';
 	return begin;
 }
 
@@ -20,16 +21,19 @@ int main(){
 
 	int t, i,sh = 0;
 	struct my_complex a, b, c;
-	char *g, **func, *func_name;
+	char *g, **func, **fname;
 	void *ext_lib;
 	struct dirent *dir;
+	char (*func_name)(char* namef);
 	struct my_complex (*funct)(struct my_complex, struct my_complex);
 	DIR *dp;
 	dp=opendir("plugin");
 
 	func=malloc(sizeof(char *)*25);
+	fname=malloc(sizeof(char*)*25);
 	for(i=0; i<25; i++){
 		func[i]=malloc(sizeof(char)*256);
+		fname[i]=malloc(sizeof(char)*256);
 	}
 
 	while((dir=readdir(dp)) != NULL){
@@ -37,29 +41,33 @@ int main(){
 			if(sh > 24){
 				func=realloc(func, (sizeof(char*)*25+sizeof(char*)));
 				func[sh]=malloc(sizeof(char)*256);
+				func[sh]="/home/2016/karatt24/complex/make_plug/plugin/";
 			}
-			func[sh] = dir->d_name;
+			strcat(func[sh], dir->d_name);
+		/*	func[sh] = redact(func[sh]);*/
+			printf("\n%s\n%s\n", func[sh], dir->d_name);
 			sh++;
-			func[sh] = redact(func[sh]);
-			printf("\n%s\n\n", func[sh]);
 		}
 	}
-/*
+printf("\n%d, ", sh);
 	while(1){
 
-		system("clear");
-
+/*		system("clear");
+*/
 		printf("Select the menu item:\n");
 
 		for(i=0; i<sh; i++){
-			func[i]=redact(func[i]);
-			ext_lib = dlopen(func[t], RTLD_NOW);
-			func_name = dlsym(ext_lib, "func_name");
-			funct = dlsym(ext_lib, func_name);
+		/*	func[i]=redact(func[i]);*/
+			ext_lib = dlopen(func[i], RTLD_NOW);
+/*			func_name = dlsym(ext_lib, "namef");
+*/			printf("\n%s\n", func_name);
+			printf("\n%s",dlerror());
+		/*	funct[i] = dlsym(ext_lib, fname[i]);
+			dlclose(ext_lib);*/
 		}
 
 		for(i=0; i<sh; i++){
-			printf("%d - %s;\n", i, func[i]);
+			printf("%d - %s;\n", i, fname[i]);
 		}
 		printf("%d - QUIT\n", sh);
 		scanf("%d", &t);
@@ -75,13 +83,12 @@ int main(){
                 	printf("b = ");
                 	scanf("%d", &b.b);
 
-			c = funct(a, b);
+		/*	c = funct[sh](a, b);*/
 			printf("\nAnswer: Re=%d, Im=%d.", c.a, c.b);
-			dlclose(ext_lib);
 		}
 
 		if ( t == sh){
-			break;
+			exit(0);
 		}
 /*		switch(t){
 			case 1:
@@ -99,10 +106,11 @@ int main(){
 			default:
 				exit(0);
 				break;
-		}
+		}*/
 		printf("Answer = %d, %d\n",c.a, c.b);
 
-	}*/
+	}
+	dlclose(ext_lib);
 	closedir(dp);
 
 }

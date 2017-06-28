@@ -7,5 +7,5 @@ all:$(LIBS)
 lib%.so: %.o 
 		gcc -shared $< -o $@ 
 
-%.o: %.c strcompl.h
+%.o: %.c
 		gcc -c $^ -fPIC 
