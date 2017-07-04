@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
+#include <limits.h>
 #include "../include/strcompl.h"
 
 char* redact(char *path){
@@ -19,57 +20,56 @@ char* redact(char *path){
 
 int main(){
 
-	int t, i,sh = 0;
+	int t, i,sh = 0, sh2 = 0;
 	struct my_complex a, b, c;
-	char *g, **func, **fname;
-	void *ext_lib;
-	struct dirent *dir;
+	char *g, **func, **fname, *buf;
+	void **ext_lib;
+	struct dirent **dir;
 	char (*func_name)(char* namef);
 	struct my_complex (*funct)(struct my_complex, struct my_complex);
 	DIR *dp;
-	dp=opendir("plugin");
-
-	func=malloc(sizeof(char *)*25);
-	fname=malloc(sizeof(char*)*25);
-	for(i=0; i<25; i++){
+/*	dp=opendir(".");*/
+	chdir("plugin");
+	sh = scandir(get_current_dir_name(), &dir,0,NULL);
+	func=malloc(sizeof(char*)*256);
+	fname=malloc(sizeof(char*)*256);
+	buf=malloc(23);
+	for(i=0; i<sh; i++){
 		func[i]=malloc(sizeof(char)*256);
 		fname[i]=malloc(sizeof(char)*256);
 	}
 
-	while((dir=readdir(dp)) != NULL){
-		if(dir->d_name[strlen(dir->d_name)-2] == 's' && dir->d_name[strlen(dir->d_name)-1] == 'o'){
-			if(sh > 24){
-				func=realloc(func, (sizeof(char*)*25+sizeof(char*)));
-				func[sh]=malloc(sizeof(char)*256);
-				func[sh]="/home/2016/karatt24/complex/make_plug/plugin/";
-			}
-			strcat(func[sh], dir->d_name);
-		/*	func[sh] = redact(func[sh]);*/
-			printf("\n%s\n%s\n", func[sh], dir->d_name);
-			sh++;
+	buf="./";
+	for(i=0; i<sh; i++){
+		if(dir[i]->d_name[strlen(dir[i]->d_name)-2] == 's' && dir[i]->d_name[strlen(dir[i]->d_name)-1] == 'o'){
+			snprintf(func[sh2],256, "%s%s", buf, dir[i]->d_name);
+			sh2++;
+
 		}
 	}
-printf("\n%d, ", sh);
+
+	for(i=0; i<sh2; i++){
+		printf("%d - %s\n\n", i+1, func[i]);
+	}
+
 	while(1){
 
 /*		system("clear");
 */
 		printf("Select the menu item:\n");
 
-		for(i=0; i<sh; i++){
-		/*	func[i]=redact(func[i]);*/
-			ext_lib = dlopen(func[i], RTLD_NOW);
-/*			func_name = dlsym(ext_lib, "namef");
-*/			printf("\n%s\n", func_name);
-			printf("\n%s",dlerror());
-		/*	funct[i] = dlsym(ext_lib, fname[i]);
-			dlclose(ext_lib);*/
+		for(i=0; i<sh2; i++){
+			ext_lib[i] = dlopen(func[i], RTLD_NOW);
+			func_name = dlsym(ext_lib, "namef");
+			snprintf(fname[i], 256, "%s", func_name);
+			printf("\n%s\n", func_name);
+			dlclose(ext_lib);
 		}
 
-		for(i=0; i<sh; i++){
+		for(i=0; i<sh2; i++){
 			printf("%d - %s;\n", i, fname[i]);
 		}
-		printf("%d - QUIT\n", sh);
+		printf("%d - QUIT\n", sh2);
 		scanf("%d", &t);
 
 		if(t != sh){
@@ -83,7 +83,7 @@ printf("\n%d, ", sh);
                 	printf("b = ");
                 	scanf("%d", &b.b);
 
-		/*	c = funct[sh](a, b);*/
+			c = fname[t](a, b);
 			printf("\nAnswer: Re=%d, Im=%d.", c.a, c.b);
 		}
 
