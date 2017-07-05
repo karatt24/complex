@@ -4,7 +4,7 @@ vpath %.c src: plugin
 vpath %.h include
 vpath %.o src: plugin
 CFLAGS= -O2 -Wall -pedantic -ansi
-LDFLAGS = -lm -ldl
+LDFLAGS = -lm -ldl -g
 
 
 .PHONY: prepare execute $(SUBDIRS) clear
@@ -12,7 +12,7 @@ LDFLAGS = -lm -ldl
 all: one $(SUBDIRS)
 
 one: $(OBJECTS)
-		gcc -o calc $^ $(CFLAGS) $(LDFLAGS) -g
+		gcc -o calc $^ $(CFLAGS) $(LDFLAGS)
 
 $(SUBDIRS):
 		make -C $@

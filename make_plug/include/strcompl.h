@@ -11,7 +11,8 @@ struct my_complex{
 	int b;
 };
 
-
+/*
 struct func_name{
-	char name[256]
+	char name[256];
 };
+*/
